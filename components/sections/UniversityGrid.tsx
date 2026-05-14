@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { universities, type UniversityCategory } from "@/lib/data/universities";
 import { UniversityMap } from "./UniversityMap";
+import { CountUp } from "@/components/ui/CountUp";
 
 type Filter = "all" | UniversityCategory;
 type View = "grid" | "map";
@@ -60,12 +61,14 @@ export function UniversityGrid() {
         </h2>
         <div className="flex flex-wrap items-center justify-center gap-8">
           {[
-            { value: "30+", label: "Colleges & Universities" },
-            { value: "15",  label: "States Represented" },
-            { value: "100%", label: "Graduation Rate" },
-          ].map(({ value, label }) => (
+            { target: 30, suffix: "+", label: "Colleges & Universities" },
+            { target: 15, suffix: "",  label: "States Represented" },
+            { target: 100, suffix: "%", label: "Graduation Rate" },
+          ].map(({ target, suffix, label }) => (
             <div key={label} className="flex flex-col items-center">
-              <span className="font-serif text-navy text-3xl font-bold leading-none">{value}</span>
+              <span className="font-serif text-navy text-3xl font-bold leading-none">
+                <CountUp target={target} suffix={suffix} />
+              </span>
               <span className="text-gray-600 text-xs mt-1">{label}</span>
             </div>
           ))}
