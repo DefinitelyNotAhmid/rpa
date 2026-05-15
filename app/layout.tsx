@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Roboto_Slab, Figtree } from "next/font/google";
 import "./globals.css";
 import { SiteShell } from "@/components/layout/SiteShell";
+import { ChatWidget } from "@/components/ui/ChatWidget";
 
 const robotoSlab = Roboto_Slab({
   subsets: ["latin"],
@@ -80,6 +81,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-cream text-deep-navy">
         <SiteShell>{children}</SiteShell>
+        <ChatWidget />
       </body>
     </html>
   );

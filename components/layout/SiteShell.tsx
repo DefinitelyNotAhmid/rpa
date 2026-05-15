@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
 
-const NO_CHROME_ROUTES = ["/student-login"];
+const NO_CHROME_ROUTES = ["/student-login", "/admin", "/csr", "/inquiry"];
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

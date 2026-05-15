@@ -23,6 +23,7 @@ export const aboutItems: NavItem[] = [
 
 export const academicsItems: NavItem[] = [
   { label: "Apply Now",              href: "/admissions/apply",    isPrimary: true, groupLabel: "ADMISSIONS", column: 1 },
+  { label: "Tuition & Fees",         href: "/admissions/tuition",                                            column: 1 },
   { label: "Curriculum",             href: "/academics/curriculum",                 groupLabel: "ACADEMICS",  column: 1 },
   { label: "Grading Scale",          href: "/academics#grading",                                             column: 1 },
   { label: "FAQs",                   href: "/faq",                                  groupLabel: "RESOURCES",  column: 2 },
