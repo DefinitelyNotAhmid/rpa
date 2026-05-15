@@ -22,7 +22,7 @@ export default function ApplyPage() {
       />
 
       <section className="max-w-2xl mx-auto px-6 py-16">
-        <p className="text-muted leading-relaxed mb-8">
+        <p className="text-gray-700 leading-relaxed mb-8">
           Complete the form below to begin your application to Rise Preparatory
           Academy. A member of our admissions team will follow up within 3–5
           business days.
