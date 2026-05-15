@@ -92,9 +92,9 @@ export default function ApplyPage() {
               className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy bg-white"
             >
               <option value="">Select a grade</option>
-              {Array.from({ length: 13 }, (_, i) => (
-                <option key={i} value={i === 0 ? "K" : String(i)}>
-                  {i === 0 ? "Kindergarten" : `Grade ${i}`}
+              {Array.from({ length: 8 }, (_, i) => (
+                <option key={i} value={String(i + 5)}>
+                  Grade {i + 5}
                 </option>
               ))}
             </select>
