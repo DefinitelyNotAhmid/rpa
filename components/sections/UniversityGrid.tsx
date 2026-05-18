@@ -96,7 +96,7 @@ export function UniversityGrid() {
             {filters.map((f) => (
               <button key={f.value} onClick={() => handleFilter(f.value)} className={tabCls(active === f.value)}>
                 {f.label}
-                <span className="ml-1.5 font-normal opacity-90">
+                <span className="ml-1.5 font-normal">
                   ({f.value === "all"
                     ? universities.length
                     : universities.filter((u) => u.categories.includes(f.value as UniversityCategory)).length})

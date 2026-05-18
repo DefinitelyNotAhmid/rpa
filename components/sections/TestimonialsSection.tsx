@@ -110,7 +110,7 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
 
         <div className="relative z-10 mt-5">
           <p className="text-sm font-semibold text-gold/90">— {testimonial.author}</p>
-          <p className="text-xs text-cream/70 mt-0.5">{testimonial.role}</p>
+          <p className="text-xs text-cream/90 mt-0.5">{testimonial.role}</p>
         </div>
 
         <div className="relative z-10 mt-3">
@@ -185,7 +185,7 @@ export function TestimonialsSection() {
           <h2 className="font-serif text-white text-2xl md:text-4xl">
             Trusted by Families Across South Florida
           </h2>
-          <p className="text-cream/70 text-sm max-w-xl mx-auto">
+          <p className="text-cream/90 text-sm max-w-xl mx-auto">
             Real stories from students and parents whose lives were changed by Rise Preparatory Academy.
           </p>
         </div>
@@ -205,7 +205,7 @@ export function TestimonialsSection() {
             </p>
             <footer className="mt-5">
               <p className="text-sm font-semibold text-gold">— {featured.author}</p>
-              <p className="text-xs text-cream/60 mt-0.5">{featured.role}</p>
+              <p className="text-xs text-cream/90 mt-0.5">{featured.role}</p>
             </footer>
           </blockquote>
         </div>

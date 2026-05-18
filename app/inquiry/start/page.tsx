@@ -128,7 +128,7 @@ export default function InquiryStartPage() {
             <div className="w-12 h-12 rounded-2xl bg-[#C9A84C] flex items-center justify-center mb-4 shadow-lg">
               <MessageSquare size={22} className="text-[#030349]" />
             </div>
-            <p className="text-white/70 text-xs font-semibold uppercase tracking-widest mb-3">Admissions Support</p>
+            <p className="text-white/90 text-xs font-semibold uppercase tracking-widest mb-3">Admissions Support</p>
             <blockquote className="border-l-4 border-[#C9A84C] pl-5">
               <p className="font-serif italic text-white text-xl leading-relaxed">
                 &ldquo;We&rsquo;re here to answer every question &mdash; big or small.&rdquo;
@@ -148,7 +148,7 @@ export default function InquiryStartPage() {
             ))}
           </div>
 
-          <p className="text-white/40 text-xs uppercase tracking-widest">
+          <p className="text-white/80 text-xs uppercase tracking-widest">
             Rise Preparatory Academy &middot; Cutler Bay, FL
           </p>
         </div>
@@ -175,7 +175,7 @@ export default function InquiryStartPage() {
 
           {/* Heading */}
           <div className="mb-8">
-            <p className="text-xs font-bold uppercase tracking-widest text-[#926a1f] mb-2">Admissions Chat</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#7a5518] mb-2">Admissions Chat</p>
             <h1 className="font-serif text-[#1C2956] text-3xl md:text-4xl mb-2">How can we help you?</h1>
             <p className="text-gray-500 text-sm">Fill in your details and a staff member will respond shortly.</p>
           </div>

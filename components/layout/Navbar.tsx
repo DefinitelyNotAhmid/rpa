@@ -84,14 +84,14 @@ export function Navbar() {
         {/* Mobile menu */}
         {menuOpen && (
           <div className="md:hidden bg-navy border-t border-white/10 px-6 pb-6 pt-4 flex flex-col gap-4">
-            <p className="text-cream/70 text-[0.65rem] uppercase tracking-widest font-semibold">About</p>
+            <p className="text-cream/90 text-[0.65rem] uppercase tracking-widest font-semibold">About</p>
             {aboutItems.map((item) => (
               <Link key={item.label} href={item.href} onClick={() => setMenuOpen(false)}
                 className="text-cream/80 hover:text-gold transition-colors text-sm pl-2">
                 {item.label}
               </Link>
             ))}
-            <p className="text-cream/70 text-[0.65rem] uppercase tracking-widest font-semibold mt-2">Academics</p>
+            <p className="text-cream/90 text-[0.65rem] uppercase tracking-widest font-semibold mt-2">Academics</p>
             {academicsItems.map((item) => (
               <Link key={item.label} href={item.href} onClick={() => setMenuOpen(false)}
                 className="text-cream/80 hover:text-gold transition-colors text-sm pl-2">

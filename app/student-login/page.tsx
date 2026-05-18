@@ -44,7 +44,7 @@ export default function StudentLoginPage() {
               &ldquo;Empowering students to become scholars.&rdquo;
             </p>
           </blockquote>
-          <p className="mt-4 text-cream/60 text-xs font-sans uppercase tracking-widest">
+          <p className="mt-4 text-cream/90 text-xs font-sans uppercase tracking-widest">
             Rise Preparatory Academy &middot; Cutler Bay, FL
           </p>
         </div>

@@ -198,7 +198,7 @@ export default function InquiryThreadPage() {
         <div className="flex items-center justify-between px-4 pt-3 pb-2 border-b border-white/10 relative">
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 text-white/60 hover:text-white text-xs transition-colors"
+            className="inline-flex items-center gap-1.5 text-white/90 hover:text-white text-xs transition-colors"
             aria-label="Back to Rise Prep site"
           >
             <ArrowLeft size={13} />
@@ -213,7 +213,7 @@ export default function InquiryThreadPage() {
             className="object-contain absolute left-1/2 -translate-x-1/2"
             style={{ filter: "brightness(0) invert(1)" }}
           />
-          <span className="text-[10px] font-mono text-white/70 tracking-wider">{refId(id)}</span>
+          <span className="text-[10px] font-mono text-white/90 tracking-wider">{refId(id)}</span>
         </div>
 
         {/* Row 2 */}
@@ -335,7 +335,7 @@ export default function InquiryThreadPage() {
         <div className="sticky bottom-0 px-4 pb-4 pt-2"
           style={{ background: "linear-gradient(to top, #f0eef0 80%, transparent)" }}>
           <div className="max-w-3xl mx-auto">
-            <p className="text-center text-[10px] text-gray-400 mb-2 flex items-center justify-center gap-1">
+            <p className="text-center text-[10px] text-gray-600 mb-2 flex items-center justify-center gap-1">
               <LockIcon size={9} className="opacity-60" /> Rise Prep Admissions · Secure Chat
             </p>
             <form
@@ -360,7 +360,7 @@ export default function InquiryThreadPage() {
                 <Send size={14} className="text-[#030349]" />
               </button>
             </form>
-            <p className="text-center text-[10px] text-gray-400 mt-1.5">Enter to send · Shift+Enter for new line</p>
+            <p className="text-center text-[10px] text-gray-600 mt-1.5">Enter to send · Shift+Enter for new line</p>
           </div>
         </div>
       ) : (

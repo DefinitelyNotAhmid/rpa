@@ -133,7 +133,7 @@ export function Footer() {
 
       {/* Sub-footer */}
       <div className="bg-[#020235] border-t border-white/5 py-3 px-6 text-center">
-        <p className="text-[0.7rem] text-cream/70 tracking-wide">
+        <p className="text-[0.7rem] text-cream/90 tracking-wide">
           © {new Date().getFullYear()} Rise Preparatory Academy
         </p>
         <Link
