@@ -20,23 +20,13 @@ export default function AcademicsPage() {
   return (
     <>
       <PageHero
-        title="Academics"
+        title="Grading Scale"
         breadcrumb="Home / Academics"
       />
 
       <ScrollReveal>
       <section className="max-w-4xl mx-auto px-6 py-16 space-y-10">
-        <div id="curriculum">
-          <h2 className="text-navy text-2xl md:text-3xl mb-4">Curriculum</h2>
-          <p className="text-gray-600 leading-relaxed">
-            Our rigorous curriculum is designed to challenge students and
-            prepare them for college-level coursework. We offer accelerated
-            courses across core subjects including Mathematics, English
-            Language Arts, Science, and Social Studies, supplemented by
-            electives that broaden students&apos; horizons.
-          </p>
-        </div>
-
+      
         <div id="grading">
           <h2 className="text-navy text-2xl md:text-3xl mb-2">Grading Scale</h2>
           <p className="text-xs font-semibold uppercase tracking-widest text-[#7a6020] mb-4">
