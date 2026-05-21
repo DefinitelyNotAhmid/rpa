@@ -16,6 +16,11 @@ export function ScrollReveal({ children, className = "", delay = "delay-100" }: 
     const el = ref.current;
     if (!el) return;
 
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setVisible(true);
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -33,7 +38,7 @@ export function ScrollReveal({ children, className = "", delay = "delay-100" }: 
   return (
     <div
       ref={ref}
-      className={`${visible ? `animate-fade-up ${delay}` : "opacity-0"} ${className}`}
+      className={`${visible ? `animate-fade-up ${delay}` : "opacity-0 translate-y-4"} transition-all duration-500 ease-out ${className}`}
     >
       {children}
     </div>

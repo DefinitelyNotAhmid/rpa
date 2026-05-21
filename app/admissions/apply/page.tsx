@@ -1,19 +1,29 @@
-import type { Metadata } from "next";
-import { PageHero } from "@/components/ui/PageHero";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Apply Now",
-  description:
-    "Start your application to Rise Preparatory Academy. Complete the form and our admissions team will follow up within 3–5 business days.",
-  openGraph: {
-    title: "Apply Now | Rise Preparatory Academy",
-    description:
-      "Start your application to Rise Preparatory Academy. Complete the form and our admissions team will follow up within 3–5 business days.",
-    url: "https://riseprep.vercel.app/admissions/apply",
-  },
-};
+import { useState } from "react";
+import { PageHero } from "@/components/ui/PageHero";
+import { useToast } from "@/components/ui/Toast";
 
 export default function ApplyPage() {
+  const { show } = useToast();
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await new Promise((res) => setTimeout(res, 1500));
+      setSubmitted(true);
+      (e.target as HTMLFormElement).reset();
+      show("Application received! Our team will follow up within 3\u20135 business days.", "success");
+    } catch {
+      show("Something went wrong. Please try again.", "error");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <>
       <PageHero
@@ -28,7 +38,7 @@ export default function ApplyPage() {
           business days.
         </p>
 
-        <form className="space-y-6" aria-label="Application form">
+        <form className="space-y-6" aria-label="Application form" onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="firstName" className="block text-sm font-medium text-navy mb-1">
@@ -39,7 +49,8 @@ export default function ApplyPage() {
                 name="firstName"
                 type="text"
                 required
-                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy"
+                disabled={loading}
+                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy disabled:opacity-50 disabled:cursor-not-allowed"
               />
             </div>
             <div>
@@ -51,7 +62,8 @@ export default function ApplyPage() {
                 name="lastName"
                 type="text"
                 required
-                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy"
+                disabled={loading}
+                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy disabled:opacity-50 disabled:cursor-not-allowed"
               />
             </div>
           </div>
@@ -65,7 +77,8 @@ export default function ApplyPage() {
               name="email"
               type="email"
               required
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy"
+              disabled={loading}
+              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy disabled:opacity-50 disabled:cursor-not-allowed"
             />
           </div>
 
@@ -77,7 +90,8 @@ export default function ApplyPage() {
               id="phone"
               name="phone"
               type="tel"
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy"
+              disabled={loading}
+              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy disabled:opacity-50 disabled:cursor-not-allowed"
             />
           </div>
 
@@ -89,7 +103,8 @@ export default function ApplyPage() {
               id="grade"
               name="grade"
               required
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy bg-white"
+              disabled={loading}
+              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy bg-white disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <option value="">Select a grade</option>
               {Array.from({ length: 8 }, (_, i) => (
@@ -108,12 +123,26 @@ export default function ApplyPage() {
               id="message"
               name="message"
               rows={4}
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy resize-none"
+              disabled={loading}
+              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy resize-none disabled:opacity-50 disabled:cursor-not-allowed"
             />
           </div>
 
-          <button type="submit" className="btn-primary w-full md:w-auto">
-            Submit Application
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn-primary w-full md:w-auto inline-flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {loading ? (
+              <>
+                <span className="w-4 h-4 rounded-full border-2 border-deep-navy/30 border-t-deep-navy animate-spin" />
+                Submitting&hellip;
+              </>
+            ) : submitted ? (
+              "Submit Another Application"
+            ) : (
+              "Submit Application"
+            )}
           </button>
         </form>
       </section>

@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { createPortal } from "react-dom";
-import type { ReactNode } from "react";
+import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from "react";
 
 interface Testimonial {
   quote: string;
@@ -76,19 +76,55 @@ const testimonials: Testimonial[] = [
 
 function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   const [isOpen, setIsOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
-  const close = useCallback(() => setIsOpen(false), []);
+  const close = useCallback(() => {
+    setIsOpen(false);
+    window.requestAnimationFrame(() => {
+      triggerRef.current?.focus();
+    });
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") close(); };
+    const onKey = (e: globalThis.KeyboardEvent) => { if (e.key === "Escape") close(); };
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
+    window.requestAnimationFrame(() => {
+      dialogRef.current?.focus();
+    });
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
     };
   }, [isOpen, close]);
+
+  const trapFocus = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (event.key !== "Tab") return;
+
+    const focusable = dialogRef.current?.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+    );
+
+    if (!focusable || focusable.length === 0) {
+      event.preventDefault();
+      dialogRef.current?.focus();
+      return;
+    }
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    const active = document.activeElement;
+
+    if (event.shiftKey && active === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && active === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
 
   return (
     <>
@@ -115,9 +151,11 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
 
         <div className="relative z-10 mt-3">
           <button
+            ref={triggerRef}
             onClick={() => setIsOpen(true)}
             aria-haspopup="dialog"
-            className="text-xs text-cream/75 hover:text-cream transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded"
+            aria-expanded={isOpen}
+            className="text-xs text-cream/75 hover:text-cream transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded hover:translate-x-0.5"
           >
             Read full story →
           </button>
@@ -129,19 +167,22 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-deep-navy/80 backdrop-blur-sm animate-fade-in"
           onClick={close}
-          role="dialog"
-          aria-modal="true"
-          aria-label={`Full testimonial from ${testimonial.author}`}
         >
           <div
-            className="relative bg-navy rounded-2xl max-w-lg w-full px-8 pt-10 pb-8 shadow-2xl overflow-y-auto animate-fade-up"
+            ref={dialogRef}
+            tabIndex={-1}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Full testimonial from ${testimonial.author}`}
+            className="relative bg-navy rounded-2xl max-w-lg w-full px-8 pt-10 pb-8 shadow-2xl overflow-y-auto animate-fade-up transition-transform duration-300"
             style={{ maxHeight: "80vh" }}
             onClick={(e) => e.stopPropagation()}
+            onKeyDown={trapFocus}
           >
             {/* Close button */}
             <button
               onClick={close}
-              className="absolute top-4 right-4 text-cream/60 hover:text-cream text-lg leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded"
+              className="absolute top-4 right-4 text-cream/60 hover:text-cream text-lg leading-none transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded hover:rotate-90"
               aria-label="Close"
             >
               ✕

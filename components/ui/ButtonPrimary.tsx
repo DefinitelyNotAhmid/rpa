@@ -13,7 +13,7 @@ export function ButtonPrimary({ href, children, external }: Props) {
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className="btn-primary inline-flex items-center gap-1.5"
+        className="group btn-primary inline-flex items-center gap-1.5 hover-lift-sm focus-ring-gold"
       >
         {children}
         <ExternalIcon />
@@ -21,7 +21,7 @@ export function ButtonPrimary({ href, children, external }: Props) {
     );
   }
   return (
-    <Link href={href} className="btn-primary inline-block">
+    <Link href={href} className="group btn-primary inline-flex items-center justify-center hover-lift-sm focus-ring-gold">
       {children}
     </Link>
   );
@@ -34,7 +34,7 @@ function ExternalIcon() {
       height="11"
       viewBox="0 0 12 12"
       aria-hidden="true"
-      className="opacity-70"
+      className="opacity-70 transition-transform duration-200 group-hover:translate-x-0.5"
     >
       <path
         d="M3.5 3H2a1 1 0 00-1 1v6a1 1 0 001 1h6a1 1 0 001-1V8.5M7 1h4m0 0v4m0-4L5 7"

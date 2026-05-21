@@ -17,6 +17,12 @@ export function CountUp({ target, suffix = "", duration = 1500 }: Props) {
     const el = ref.current;
     if (!el) return;
 
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setCount(target);
+      hasAnimated.current = true;
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !hasAnimated.current) {
@@ -43,7 +49,7 @@ export function CountUp({ target, suffix = "", duration = 1500 }: Props) {
   }, [target, duration]);
 
   return (
-    <span ref={ref}>
+    <span ref={ref} className="tabular-nums">
       {count}{suffix}
     </span>
   );

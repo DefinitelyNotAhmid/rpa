@@ -106,14 +106,42 @@ export function UniversityGrid() {
           </div>
 
           {/* Result count */}
-          <p className="text-center text-xs text-gray-600 mb-8">
-            Showing {visible.length} of {filtered.length} institutions
-          </p>
+          {!fading && filtered.length > 0 && (
+            <p className="text-center text-xs text-gray-600 mb-8">
+              Showing {visible.length} of {filtered.length} institutions
+            </p>
+          )}
+
+          {/* Empty state */}
+          {!fading && filtered.length === 0 && (
+            <div className="max-w-5xl mx-auto flex flex-col items-center justify-center py-16 gap-4 text-center">
+              <p className="text-navy/60 text-base font-medium">No institutions found for this filter.</p>
+              <button
+                onClick={() => handleFilter("all")}
+                className="text-sm font-semibold text-navy border border-navy/30 rounded-full px-6 py-2 hover:bg-navy hover:text-white transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy"
+              >
+                Show All
+              </button>
+            </div>
+          )}
+
+          {/* Skeleton loader during transition */}
+          {fading && (
+            <div className="max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              {Array.from({ length: INITIAL_VISIBLE }).map((_, i) => (
+                <div key={i} className="bg-white border border-gray-100 rounded-xl p-4 flex flex-col items-center gap-3 shadow-sm animate-pulse">
+                  <div className="w-full h-14 bg-gray-200 rounded" />
+                  <div className="h-3 w-3/4 bg-gray-200 rounded" />
+                  <div className="h-3 w-1/2 bg-gray-200 rounded" />
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Grid */}
           <div
             className={`max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 transition-opacity duration-150 ${
-              fading ? "opacity-0" : "opacity-100"
+              fading ? "hidden" : "opacity-100"
             }`}
           >
             {visible.map((u) => (

@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import type { InquiryTopic } from "@/lib/types/inquiry";
+import { useToast } from "@/components/ui/Toast";
 import {
   MessageSquare, DollarSign, Shirt, FileText,
   GraduationCap, ArrowRight, User, Mail, Lock, Clock, CheckCircle, RotateCcw, ChevronRight, Eye, EyeOff,
@@ -27,6 +28,7 @@ const TRUST_BADGES = [
 
 export default function InquiryStartPage() {
   const router = useRouter();
+  const { show } = useToast();
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -81,7 +83,7 @@ export default function InquiryStartPage() {
       .single();
 
     if (threadErr || !thread) {
-      setError("Something went wrong. Please try again.");
+      show("Something went wrong. Please try again.", "error");
       setLoading(false);
       return;
     }
@@ -269,7 +271,6 @@ export default function InquiryStartPage() {
               <p className="text-right text-[10px] text-gray-600 mt-1">{form.message.length} chars</p>
             </div>
 
-            {error && !error.includes("topic") && <p className="text-red-500 text-xs">{error}</p>}
 
             <button
               type="submit"

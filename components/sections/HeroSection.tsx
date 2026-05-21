@@ -8,7 +8,7 @@ export function HeroSection() {
         src="/rise-preparatory-academy-cutler-bay-fl-primaryphoto.jpg"
         alt="Rise Preparatory Academy building exterior, Cutler Bay FL"
         fill
-        className="object-cover"
+        className="object-cover animate-soft-zoom"
         priority
       />
       <div className="absolute inset-0 bg-deep-navy/50" />
@@ -22,7 +22,7 @@ export function HeroSection() {
         <p className="text-cream text-lg md:text-xl mb-8 max-w-xl mx-auto animate-fade-up delay-200">
           A college-preparatory academy built for driven students.
         </p>
-        <div className="animate-fade-up delay-300">
+        <div className="animate-fade-up delay-300 hover-lift-sm inline-block rounded-full">
           <ButtonPrimary href="/admissions/apply">Apply Now</ButtonPrimary>
         </div>
       </div>

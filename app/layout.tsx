@@ -3,6 +3,8 @@ import { Roboto_Slab, Figtree } from "next/font/google";
 import "./globals.css";
 import { SiteShell } from "@/components/layout/SiteShell";
 import { ChatWidget } from "@/components/ui/ChatWidget";
+import { ToastProvider } from "@/components/ui/Toast";
+import { SplashScreen } from "@/components/ui/SplashScreen";
 
 const robotoSlab = Roboto_Slab({
   subsets: ["latin"],
@@ -80,8 +82,11 @@ export default function RootLayout({
       className={`${robotoSlab.variable} ${figtree.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-cream text-deep-navy">
-        <SiteShell>{children}</SiteShell>
-        <ChatWidget />
+        <ToastProvider>
+          <SplashScreen />
+          <SiteShell>{children}</SiteShell>
+          <ChatWidget />
+        </ToastProvider>
       </body>
     </html>
   );

@@ -3,6 +3,7 @@ import { HeroSection } from "@/components/sections/HeroSection";
 import { TrustBar } from "@/components/sections/TrustBar";
 import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
 import { UniversityGrid } from "@/components/sections/UniversityGrid";
+import { UniversityMarquee } from "@/components/sections/UniversityMarquee";
 import { CtaBand } from "@/components/ui/CtaBand";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
@@ -55,6 +56,7 @@ export default function Home() {
       <HeroSection />
       <ScrollReveal><TrustBar /></ScrollReveal>
       <ScrollReveal delay="delay-200"><UniversityGrid /></ScrollReveal>
+      <ScrollReveal delay="delay-100"><UniversityMarquee /></ScrollReveal>
       <ScrollReveal delay="delay-100"><TestimonialsSection /></ScrollReveal>
       <ScrollReveal delay="delay-100"><CtaBand ctaLabel="Apply Now" ctaHref="/admissions/apply" /></ScrollReveal>
     </>

@@ -1,128 +1,99 @@
 import type { Metadata } from "next";
+import { ButtonPrimary } from "@/components/ui/ButtonPrimary";
 import { PageHero } from "@/components/ui/PageHero";
 import { CtaBand } from "@/components/ui/CtaBand";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 export const metadata: Metadata = {
-  title: "Contact Us",
+  title: "Contact",
   description:
-    "Get in touch with Rise Preparatory Academy. Call (305) 760-9494, email us, or visit our campus at 18900 SW 106 Ave, Cutler Bay, FL 33157.",
-  openGraph: {
-    title: "Contact Us | Rise Preparatory Academy",
-    description:
-      "Get in touch with Rise Preparatory Academy. Call (305) 760-9494, email us, or visit our campus at 18900 SW 106 Ave, Cutler Bay, FL 33157.",
-    url: "https://riseprep.vercel.app/contact",
-  },
+    "Need help? Chat with Admissions for enrollment questions or use the school contact details for general inquiries.",
 };
 
 export default function ContactPage() {
   return (
-    <>
+    <main>
       <PageHero
         title="Contact Us"
         breadcrumb="Home / Contact"
       />
 
       <ScrollReveal>
-      <section className="max-w-4xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-2 gap-12">
-        {/* Contact info */}
-        <div className="space-y-6">
-          <h2 className="text-navy text-2xl md:text-3xl">Get in Touch</h2>
-          <address className="not-italic text-gray-600 text-sm space-y-4 leading-relaxed">
-            <p>
-              <span className="block font-semibold text-navy">School Address</span>
-              18900 SW 106 Ave, Suite 205
-              <br />
-              Cutler Bay, FL 33157
-            </p>
-            <p>
-              <span className="block font-semibold text-navy">Admissions Office</span>
-              <a
-                href="tel:+13057609494"
-                className="hover:text-navy transition-colors"
-              >
-                (305) 760-9494
-              </a>
-            </p>
-            <p>
-              <span className="block font-semibold text-navy">Fax</span>
-              (305) 760-9494
-            </p>
-            <p>
-              <span className="block font-semibold text-navy">Email</span>
-              <a
-                href="mailto:Sperry@risepreparatory.org"
-                className="hover:text-navy transition-colors"
-              >
-                Sperry@risepreparatory.org
-              </a>
-            </p>
-            <p>
-              <span className="block font-semibold text-navy">Office Hours</span>
-              Monday – Friday: 8:00 AM – 4:00 PM
-            </p>
-          </address>
-        </div>
+        <section className="max-w-5xl mx-auto px-6 py-16 space-y-10">
+          <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] items-start">
+            <div className="space-y-6">
+              <p className="text-xs font-bold uppercase tracking-widest text-[#7a5518]">Admissions first</p>
+              <h2 className="text-navy text-3xl md:text-4xl font-serif">Questions about enrollment?</h2>
+              <p className="text-gray-600 text-base leading-relaxed max-w-2xl">
+                The fastest way to reach our admissions team is through the chat widget in the corner.
+                It’s designed for applications, visit requests, and quick enrollment questions, so this page can stay focused on other ways to connect.
+              </p>
 
-        {/* Contact form */}
-        <form className="space-y-5" aria-label="Contact form">
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-navy mb-1">
-              Your Name
-            </label>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              required
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy"
-            />
+              <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                <ButtonPrimary href="/inquiry/start">Chat with Admissions</ButtonPrimary>
+                <ButtonPrimary href="/admissions/apply">Apply Now</ButtonPrimary>
+              </div>
+            </div>
+
+            <aside className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
+              <h3 className="text-navy text-xl font-serif">General school contact</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Use this info for office-level questions that do not need a live admissions conversation.
+              </p>
+
+              <address className="not-italic text-sm text-gray-600 space-y-4 leading-relaxed">
+                <p>
+                  <span className="block font-semibold text-navy">School Address</span>
+                  18900 SW 106 Ave, Suite 205
+                  <br />
+                  Cutler Bay, FL 33157
+                </p>
+                <p>
+                  <span className="block font-semibold text-navy">Office Phone</span>
+                  <a href="tel:+13057609494" className="hover:text-navy transition-colors">
+                    (305) 760-9494
+                  </a>
+                </p>
+                <p>
+                  <span className="block font-semibold text-navy">Email</span>
+                  <a href="mailto:Sperry@risepreparatory.org" className="hover:text-navy transition-colors">
+                    Sperry@risepreparatory.org
+                  </a>
+                </p>
+                <p>
+                  <span className="block font-semibold text-navy">Office Hours</span>
+                  Monday – Friday: 8:00 AM – 4:00 PM
+                </p>
+              </address>
+            </aside>
           </div>
-          <div>
-            <label htmlFor="contactEmail" className="block text-sm font-medium text-navy mb-1">
-              Email Address
-            </label>
-            <input
-              id="contactEmail"
-              name="email"
-              type="email"
-              required
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy"
-            />
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="bg-navy/5 border border-navy/10 rounded-2xl p-5">
+              <h3 className="font-serif text-navy text-lg mb-2">Use chat for admissions</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Best for enrollment questions, scheduling, and application help.
+              </p>
+            </div>
+            <div className="bg-navy/5 border border-navy/10 rounded-2xl p-5">
+              <h3 className="font-serif text-navy text-lg mb-2">Use apply for next steps</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Start the application when you’re ready to move forward.
+              </p>
+            </div>
+            <div className="bg-navy/5 border border-navy/10 rounded-2xl p-5">
+              <h3 className="font-serif text-navy text-lg mb-2">Use office contact for general needs</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Reach the school office for non-admissions questions and basic support.
+              </p>
+            </div>
           </div>
-          <div>
-            <label htmlFor="subject" className="block text-sm font-medium text-navy mb-1">
-              Subject
-            </label>
-            <input
-              id="subject"
-              name="subject"
-              type="text"
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy"
-            />
-          </div>
-          <div>
-            <label htmlFor="contactMessage" className="block text-sm font-medium text-navy mb-1">
-              Message
-            </label>
-            <textarea
-              id="contactMessage"
-              name="message"
-              rows={5}
-              required
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy resize-none"
-            />
-          </div>
-          <button type="submit" className="btn-primary w-full md:w-auto">
-            Send Message
-          </button>
-        </form>
-      </section>
+        </section>
       </ScrollReveal>
 
       <ScrollReveal delay="delay-100">
-        <CtaBand ctaLabel="Apply Now" ctaHref="/admissions/apply" />
+        <CtaBand heading="Still have an admissions question?" ctaLabel="Chat with Admissions" ctaHref="/inquiry/start" />
       </ScrollReveal>
-    </>
+    </main>
   );
 }
