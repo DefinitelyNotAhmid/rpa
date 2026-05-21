@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import type { InquiryThread, InquiryMessage, ThreadStatus, CsrEmail } from "@/lib/types/inquiry";
+import { kbContent } from "@/lib/data/kb-content";
 
 /* ─── HELPERS ───────────────────────────────────────────────────────────── */
 
@@ -930,7 +931,7 @@ function ChatContents({
         <>
           {/* Messages + inline notes (merged timeline) */}
           <div className="flex-1 overflow-y-auto px-4 py-5">
-            <p className="text-center text-[11px] text-gray-400 mb-5">
+            <p className="text-center text-[11px] text-gray-500 mb-5">
               {new Date(thread.created_at).toLocaleDateString([], { weekday: "long", month: "short", day: "numeric" })}
             </p>
             {timeline.map((item) =>
@@ -939,9 +940,9 @@ function ChatContents({
               ) : (
                 <div key={item.id} className="my-3 mx-2">
                   <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-amber-600 mb-1">Internal Note</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-amber-800 mb-1">Internal Note</p>
                     <p className="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap">{item.body}</p>
-                    <p className="text-[10px] text-amber-500 mt-2">{formatTime(item.created_at)}</p>
+                    <p className="text-[10px] text-amber-700 mt-2">{formatTime(item.created_at)}</p>
                   </div>
                 </div>
               )
@@ -1008,13 +1009,7 @@ function ChatContents({
               </button>
             </form>
             {replyMode === "internal" && (
-              <p className="text-[11px] text-amber-600 mt-1.5 flex items-center gap-1 px-1">
-                <AlertCircle size={11} />
-                You are writing an internal case note (not visible to contact)
-              </p>
-            )}
-            {replyMode === "internal" && (
-              <p className="text-[11px] text-amber-600 mt-1.5 flex items-center gap-1 px-1">
+              <p className="text-[11px] text-amber-800 mt-1.5 flex items-center gap-1 px-1">
                 <AlertCircle size={11} />
                 You are writing an internal case note (not visible to contact)
               </p>
@@ -1027,50 +1022,218 @@ function ChatContents({
 }
 
 function KbContents({ aiQuery, setAiQuery }: { aiQuery: string; setAiQuery: (v: string) => void }) {
+  const q = aiQuery.trim().toLowerCase();
+  const [aiResponse, setAiResponse] = React.useState<string | null>(null);
+  const [aiLoading, setAiLoading] = React.useState(false);
+  const [copied, setCopied] = React.useState(false);
+
+  const filteredFaq = q
+    ? faqCards.filter((c) =>
+        c.title.toLowerCase().includes(q) ||
+        c.tag.toLowerCase().includes(q) ||
+        c.policy.toLowerCase().includes(q) ||
+        c.preview.toLowerCase().includes(q)
+      )
+    : faqCards;
+
+  const filteredSite = q
+    ? kbContent.filter((e) =>
+        e.title.toLowerCase().includes(q) ||
+        e.section.toLowerCase().includes(q) ||
+        e.content.toLowerCase().includes(q) ||
+        e.tags.some((t) => t.includes(q))
+      )
+    : [];
+
+  const hasResults = filteredFaq.length > 0 || filteredSite.length > 0;
+
+  const handleAskAi = () => {
+    if (!aiQuery.trim()) return;
+    setAiLoading(true);
+    setAiResponse(null);
+    setTimeout(() => {
+      const match = kbContent.find((e) =>
+        e.title.toLowerCase().includes(q) ||
+        e.content.toLowerCase().includes(q) ||
+        e.tags.some((t) => t.includes(q))
+      );
+      const faqMatch = faqCards.find((c) =>
+        c.title.toLowerCase().includes(q) ||
+        c.policy.toLowerCase().includes(q)
+      );
+      if (match) {
+        const answer = match.content.length > 320
+          ? match.content.slice(0, 320) + "…"
+          : match.content;
+        setAiResponse(`${answer}\n\nFor more details, visit the ${match.title} page.`);
+      } else if (faqMatch) {
+        setAiResponse(faqMatch.policy);
+      } else {
+        setAiResponse(
+          `I don't have specific information about "${aiQuery.trim()}" in the RPA knowledge base. Please contact the school office directly or check the website for the most up-to-date information.`
+        );
+      }
+      setAiLoading(false);
+    }, 800);
+  };
+
+  const handleCopy = () => {
+    if (!aiResponse) return;
+    navigator.clipboard.writeText(aiResponse);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <>
       {/* Header */}
       <div className="px-4 pt-5 pb-3 border-b border-gray-200">
         <div className="flex items-center justify-between mb-1">
           <h2 className="text-sm font-bold text-[#030349]">RPA Knowledge Base</h2>
-          <button className="flex items-center gap-1 text-[11px] text-gray-500 hover:text-[#1C2956] transition-colors border border-gray-200 rounded px-2 py-1 bg-white">
-            <RefreshCw size={10} />
-            Sync
-          </button>
+          {(q || aiResponse) && (
+            <button
+              onClick={() => { setAiQuery(""); setAiResponse(null); }}
+              className="flex items-center gap-1 text-[11px] text-gray-500 hover:text-[#1C2956] transition-colors border border-gray-200 rounded px-2 py-1 bg-white"
+            >
+              <RefreshCw size={10} />
+              Clear
+            </button>
+          )}
         </div>
-        <p className="text-[10px] text-gray-600">AI-powered policy search &amp; FAQ reference</p>
+        <p className="text-[10px] text-gray-600">Search policies &amp; site content — or ask AI</p>
       </div>
 
-      {/* AI search */}
+      {/* Search + Ask AI */}
       <div className="px-4 py-3 border-b border-gray-200">
         <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
           <Search size={12} className="text-gray-400 ml-3 flex-shrink-0" />
           <input
             type="text"
             value={aiQuery}
-            onChange={(e) => setAiQuery(e.target.value)}
-            placeholder="Ask RPA Knowledge Base..."
+            onChange={(e) => { setAiQuery(e.target.value); setAiResponse(null); }}
+            onKeyDown={(e) => { if (e.key === "Enter") handleAskAi(); }}
+            placeholder="Search policies, topics, pages..."
             className="flex-1 text-xs text-gray-700 placeholder:text-gray-400 outline-none py-2.5 bg-transparent"
           />
-          <button className="flex items-center gap-1 bg-[#1C2956] hover:bg-[#030349] text-[#C9A84C] text-[11px] font-semibold px-3 py-2.5 transition-colors flex-shrink-0">
+          {q && (
+            <button
+              onClick={() => { setAiQuery(""); setAiResponse(null); }}
+              aria-label="Clear"
+              className="text-gray-400 hover:text-gray-600 text-base leading-none transition-colors"
+            >
+              ×
+            </button>
+          )}
+          <button
+            onClick={handleAskAi}
+            disabled={!aiQuery.trim() || aiLoading}
+            className="flex items-center gap-1 bg-[#1C2956] hover:bg-[#030349] disabled:opacity-40 text-[#C9A84C] text-[11px] font-semibold px-3 py-2.5 transition-colors flex-shrink-0"
+          >
             <Sparkles size={11} />
-            Ask AI
+            {aiLoading ? "Thinking…" : "Ask AI"}
           </button>
         </div>
       </div>
 
-      {/* FAQ label */}
-      <div className="px-4 pt-3 pb-2">
-        <span className="text-[9px] font-bold uppercase tracking-widest text-gray-700">
-          FAQ Quick-Cards
-        </span>
-      </div>
+      {/* AI Response card */}
+      {(aiLoading || aiResponse) && (
+        <div className="px-4 pt-4">
+          <div className="bg-[#C9A84C]/10 border border-[#C9A84C]/40 rounded-xl p-4 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-[#7a5518]">
+                <Sparkles size={10} />
+                AI Response
+              </span>
+              {aiResponse && (
+                <button
+                  onClick={handleCopy}
+                  className={`flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 rounded-lg border transition-all duration-150 ${
+                    copied
+                      ? "bg-[#1C2956] text-white border-[#1C2956]"
+                      : "bg-white text-gray-600 border-gray-300 hover:border-[#1C2956] hover:text-[#1C2956]"
+                  }`}
+                >
+                  {copied ? <><CheckCircle size={11} /> Copied!</> : <><ClipboardList size={11} /> Copy</>}
+                </button>
+              )}
+            </div>
+            {aiLoading ? (
+              <div className="flex items-center gap-2 py-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C9A84C] animate-bounce [animation-delay:0ms]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C9A84C] animate-bounce [animation-delay:150ms]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C9A84C] animate-bounce [animation-delay:300ms]" />
+              </div>
+            ) : (
+              <p className="text-xs text-gray-700 leading-relaxed whitespace-pre-line">{aiResponse}</p>
+            )}
+          </div>
+        </div>
+      )}
 
-      {/* FAQ cards */}
-      <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-2 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full">
-        {faqCards.map((card) => (
-          <FaqCardItem key={card.id} card={card} />
-        ))}
+      {/* Results */}
+      <div className="flex-1 overflow-y-auto pb-4 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full">
+
+        {/* No results */}
+        {q && !hasResults && !aiResponse && !aiLoading && (
+          <p className="text-xs text-gray-400 text-center mt-8 px-4">No results for &ldquo;{aiQuery}&rdquo;</p>
+        )}
+
+        {/* FAQ Quick-Cards section */}
+        {filteredFaq.length > 0 && (
+          <>
+            <div className="px-4 pt-3 pb-2 flex items-center justify-between">
+              <span className="text-[9px] font-bold uppercase tracking-widest text-gray-700">
+                FAQ Quick-Cards{q ? ` (${filteredFaq.length})` : ""}
+              </span>
+            </div>
+            <div className="px-4 space-y-2">
+              {filteredFaq.map((card) => (
+                <FaqCardItem key={card.id} card={card} />
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* Site Pages section — only when searching */}
+        {filteredSite.length > 0 && (
+          <>
+            <div className="px-4 pt-4 pb-2">
+              <span className="text-[9px] font-bold uppercase tracking-widest text-gray-700">
+                Site Pages ({filteredSite.length})
+              </span>
+            </div>
+            <div className="px-4 space-y-2">
+              {filteredSite.map((entry) => {
+                const snippet = (() => {
+                  const idx = entry.content.toLowerCase().indexOf(q);
+                  if (idx === -1) return entry.content.slice(0, 120);
+                  const start = Math.max(0, idx - 40);
+                  const end = Math.min(entry.content.length, idx + 100);
+                  return (start > 0 ? "…" : "") + entry.content.slice(start, end) + (end < entry.content.length ? "…" : "");
+                })();
+                return (
+                  <div key={entry.id} className="border border-gray-200 rounded-xl bg-white overflow-hidden shadow-sm p-4 space-y-1.5">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-sm font-semibold text-[#030349]">{entry.title}</span>
+                      <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700">
+                        {entry.section}
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-gray-500 leading-relaxed">{snippet}</p>
+                    <a
+                      href={entry.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#1C2956] hover:text-[#C9A84C] transition-colors"
+                    >
+                      View page →
+                    </a>
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )}
       </div>
     </>
   );
