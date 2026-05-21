@@ -1013,6 +1013,12 @@ function ChatContents({
                 You are writing an internal case note (not visible to contact)
               </p>
             )}
+            {replyMode === "internal" && (
+              <p className="text-[11px] text-amber-600 mt-1.5 flex items-center gap-1 px-1">
+                <AlertCircle size={11} />
+                You are writing an internal case note (not visible to contact)
+              </p>
+            )}
           </div>
         </>
       )}
@@ -1108,6 +1114,20 @@ export default function CsrPage() {
       .eq("thread_id", activeId)
       .order("created_at", { ascending: true })
       .then(({ data }: { data: InquiryMessage[] | null }) => setThreadMessages(data ?? []));
+  }, [activeId]);
+
+  /* ── Load inline notes when active thread changes ── */
+  useEffect(() => {
+    if (!activeId) return;
+    setInlineNotes([]);
+    supabase
+      .from("csr_notes")
+      .select("id, note_text, created_at")
+      .eq("thread_id", activeId)
+      .order("created_at", { ascending: true })
+      .then(({ data }) => {
+        if (data) setInlineNotes(data.map((n: any) => ({ id: n.id, body: n.note_text, created_at: n.created_at })));
+      });
   }, [activeId]);
 
   /* ── Load inline notes when active thread changes ── */
