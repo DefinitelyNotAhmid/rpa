@@ -34,7 +34,8 @@ function timeAgo(iso: string) {
   const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
   if (diff < 60) return `${diff}s ago`;
   if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-  return `${Math.floor(diff / 3600)}h ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  return `${Math.floor(diff / 86400)}d ago`;
 }
 
 function formatTime(iso: string) {
@@ -68,7 +69,7 @@ const faqCards: FaqCard[] = [
     tag: "Student Life",
     tagColor: "bg-green-100 text-green-700",
     preview: "RPA students may participate in sports and prom at their zoned public school.",
-    policy: "Rise Prep students are permitted to participate in athletics, prom, and other extracurricular activities at their home-zoned Miami-Dade County public school. Students must maintain satisfactory academic standing and attendance at RPA. Parents should contact their zoned school directly to confirm eligibility and registration requirements.",
+    policy: "Per state regulations, private school students are eligible to participate in athletics, prom, and other extracurricular activities at their zoned public school. Students must meet the public school's eligibility requirements including GPA and conduct standards. RPA will provide necessary enrollment verification and academic records to the public school's athletic director.",
   },
   {
     id: 3,
@@ -76,8 +77,8 @@ const faqCards: FaqCard[] = [
     title: "Admissions Requirements",
     tag: "Enrollment",
     tagColor: "bg-purple-100 text-purple-700",
-    preview: "Required documents: Birth Certificate, Social Security Card, Immunization Records, and more.",
-    policy: "To enroll at Rise Preparatory Academy, families must provide: a certified Birth Certificate, Social Security Card, Florida Certificate of Immunization (Form 680), previous school records or transcripts, and proof of Miami-Dade County residency. A placement assessment may be required for new students. Contact the Admissions Office to schedule an enrollment appointment.",
+    preview: "Required documents: Birth Certificate, Social Security Card, Previous School Transcripts, and completion of the RPA Entrance Exam.",
+    policy: "The admissions process includes:\n\n1. Submit completed enrollment application\n2. Provide Birth Certificate (certified copy)\n3. Social Security Card\n4. Official transcripts from previous school(s)\n5. Complete the RPA Entrance Exam (scheduled upon application receipt)\n6. Family interview with Admissions Director\n7. Immunization records / vaccination documentation\n\nApplications are reviewed on a rolling basis. Early enrollment discounts may be available for returning families.",
   },
   {
     id: 4,
@@ -85,8 +86,8 @@ const faqCards: FaqCard[] = [
     title: "Graduation & Diplomas",
     tag: "Academic",
     tagColor: "bg-orange-100 text-orange-700",
-    preview: "RPA awards its own accredited diploma recognized by colleges and universities.",
-    policy: "RPA awards its own Cognia-accredited diploma upon successful completion of all graduation requirements. Students who participate in athletics at their zoned public school may walk in that school's graduation ceremony; however, their official diploma is issued by Rise Preparatory Academy. Diploma verification letters are available through the Registrar's Office upon request.",
+    preview: "RPA awards its own accredited diploma. Students who participate in athletics at a public school may walk in that school's graduation ceremony as well.",
+    policy: "Rise Preparatory Academy issues its own fully accredited high school diploma, recognized by colleges and universities nationwide. Students who participated in sports at their zoned public school may also be eligible to walk in that school's graduation ceremony—this is coordinated between the families and the public school administration. RPA hosts its own commencement ceremony annually.",
   },
   {
     id: 5,
@@ -94,8 +95,8 @@ const faqCards: FaqCard[] = [
     title: "School Location",
     tag: "General",
     tagColor: "bg-gray-100 text-gray-600",
-    preview: "18900 SW 106th Ave #205, Cutler Bay, FL 33157.",
-    policy: "Rise Preparatory Academy is located at 18900 SW 106th Ave #205, Cutler Bay, FL 33157. We are situated in the Cutler Bay area of Miami-Dade County. Ample parking is available on-site. For directions or transportation inquiries, please contact the school office directly.",
+    preview: "Rise Preparatory Academy is located at 18900 SW 106th Ave #205, Cutler Bay, FL 33157.",
+    policy: "Rise Preparatory Academy\n18900 SW 106th Ave #205\nCutler Bay, FL 33157\n\nThe campus is located in Cutler Bay, Florida. Families are welcome to visit the campus by scheduling a tour through the Admissions Office.",
   },
   {
     id: 6,
@@ -103,8 +104,8 @@ const faqCards: FaqCard[] = [
     title: "Campus Hours",
     tag: "General",
     tagColor: "bg-gray-100 text-gray-600",
-    preview: "School hours are 8:30 AM – 3:30 PM, Monday through Friday.",
-    policy: "Rise Preparatory Academy campus hours are 8:30 AM – 3:30 PM, Monday through Friday. The administrative office is open from 8:00 AM – 4:00 PM. Campus is closed on all Miami-Dade County Public School holidays and breaks. Early release days follow the district calendar. Students should not arrive before 8:15 AM unless attending a scheduled activity.",
+    preview: "School campus hours are 8:30 AM – 1:30 PM, Monday through Friday.",
+    policy: "Rise Preparatory Academy campus hours:\n\nMonday – Friday: 8:30 AM – 1:30 PM\n\nStudents should arrive no earlier than 8:15 AM. Dismissal begins at 1:30 PM. Any changes to the schedule (e.g., early dismissal days, holidays) will be communicated via the school's official channels. Parents picking up students after 1:45 PM may incur late pickup fees.",
   },
 ];
 
@@ -771,6 +772,9 @@ function SidebarContents({
 function ChatContents({
   thread,
   messages,
+  inlineNotes,
+  replyMode,
+  setReplyMode,
   activeTab,
   setActiveTab,
   reply,
@@ -780,6 +784,9 @@ function ChatContents({
 }: {
   thread: InquiryThread | null;
   messages: InquiryMessage[];
+  inlineNotes: { id: string; body: string; created_at: string }[];
+  replyMode: "public" | "internal";
+  setReplyMode: (m: "public" | "internal") => void;
   activeTab: "Chat" | "Email" | "Script";
   setActiveTab: (t: "Chat" | "Email" | "Script") => void;
   reply: string;
@@ -787,6 +794,19 @@ function ChatContents({
   onSend: () => void;
   onStatusChange: (s: ThreadStatus) => void;
 }) {
+  // Merge messages and inline notes into a single sorted timeline
+  type TimelineItem =
+    | { kind: "msg"; id: string; data: InquiryMessage }
+    | { kind: "note"; id: string; body: string; created_at: string };
+
+  const timeline: TimelineItem[] = [
+    ...messages.map((m): TimelineItem => ({ kind: "msg", id: m.id, data: m })),
+    ...inlineNotes.map((n): TimelineItem => ({ kind: "note", id: n.id, body: n.body, created_at: n.created_at })),
+  ].sort((a, b) => {
+    const aTime = a.kind === "msg" ? a.data.created_at : a.created_at;
+    const bTime = b.kind === "msg" ? b.data.created_at : b.created_at;
+    return new Date(aTime).getTime() - new Date(bTime).getTime();
+  });
   const tabs: ("Chat" | "Email" | "Script")[] = ["Chat", "Email", "Script"];
   const msgEndRef = React.useRef<HTMLDivElement>(null);
   const [parentTyping, setParentTyping] = React.useState(false);
@@ -874,16 +894,31 @@ function ChatContents({
           </span>
           <span className="text-[11px] text-gray-500">{thread.email}</span>
         </div>
-        <select
-          aria-label="Thread status"
-          value={thread.status}
-          onChange={(e) => onStatusChange(e.target.value as ThreadStatus)}
-          className="text-xs font-medium border border-gray-300 text-gray-600 px-2 py-1.5 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#1C2956] transition-colors cursor-pointer"
-        >
-          <option value="open">Open</option>
-          <option value="in_progress">In Progress</option>
-          <option value="resolved">Resolved</option>
-        </select>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setReplyMode(replyMode === "public" ? "internal" : "public")}
+            className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border transition-all duration-150 ${
+              replyMode === "internal"
+                ? "bg-amber-50 border-amber-400 text-amber-700"
+                : "bg-white border-gray-300 text-gray-600 hover:border-[#1C2956] hover:text-[#1C2956]"
+            }`}
+          >
+            <span className={`w-2 h-2 rounded-full ${
+              replyMode === "internal" ? "bg-amber-400" : "bg-gray-400"
+            }`} />
+            {replyMode === "internal" ? "Internal Notes" : "Public Reply"}
+          </button>
+          <select
+            aria-label="Thread status"
+            value={thread.status}
+            onChange={(e) => onStatusChange(e.target.value as ThreadStatus)}
+            className="text-xs font-medium border border-gray-300 text-gray-600 px-2 py-1.5 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#1C2956] transition-colors cursor-pointer"
+          >
+            <option value="open">Open</option>
+            <option value="in_progress">In Progress</option>
+            <option value="resolved">Resolved</option>
+          </select>
+        </div>
       </div>
 
       {/* Tab body */}
@@ -893,14 +928,24 @@ function ChatContents({
         <EmailPanel threadId={thread.id} contactEmail={thread.email} />
       ) : (
         <>
-          {/* Messages */}
+          {/* Messages + inline notes (merged timeline) */}
           <div className="flex-1 overflow-y-auto px-4 py-5">
             <p className="text-center text-[11px] text-gray-400 mb-5">
               {new Date(thread.created_at).toLocaleDateString([], { weekday: "long", month: "short", day: "numeric" })}
             </p>
-            {messages.map((msg) => (
-              <CsrChatBubble key={msg.id} msg={msg} />
-            ))}
+            {timeline.map((item) =>
+              item.kind === "msg" ? (
+                <CsrChatBubble key={item.id} msg={item.data} />
+              ) : (
+                <div key={item.id} className="my-3 mx-2">
+                  <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-amber-600 mb-1">Internal Note</p>
+                    <p className="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap">{item.body}</p>
+                    <p className="text-[10px] text-amber-500 mt-2">{formatTime(item.created_at)}</p>
+                  </div>
+                </div>
+              )
+            )}
 
             {/* Parent typing indicator */}
             {parentTyping && (
@@ -934,7 +979,9 @@ function ChatContents({
           <div className="px-4 pb-4 pt-2">
             <form
               onSubmit={(e) => { e.preventDefault(); onSend(); }}
-              className="flex items-center gap-3 border border-gray-200 rounded-xl px-4 py-3 bg-white shadow-sm"
+              className={`flex items-center gap-3 border rounded-xl px-4 py-3 bg-white shadow-sm transition-colors ${
+                replyMode === "internal" ? "border-amber-300" : "border-gray-200"
+              }`}
             >
               <button type="button" aria-label="Attach file" className="text-gray-400 hover:text-gray-600 transition-colors">
                 <Paperclip size={16} />
@@ -944,18 +991,28 @@ function ChatContents({
                 value={reply}
                 onChange={(e) => setReply(e.target.value)}
                 onKeyDown={handleReplyKeyDown}
-                placeholder="Type your reply..."
+                placeholder={replyMode === "internal" ? "Add an internal note..." : "Type your reply..."}
                 className="flex-1 text-sm text-gray-700 placeholder:text-gray-400 outline-none bg-transparent"
               />
               <button
                 type="submit"
                 aria-label="Send reply"
                 disabled={!reply.trim()}
-                className="w-8 h-8 rounded-lg bg-[#1C2956] hover:bg-[#030349] disabled:opacity-40 flex items-center justify-center transition-colors flex-shrink-0"
+                className={`w-8 h-8 rounded-lg disabled:opacity-40 flex items-center justify-center transition-colors flex-shrink-0 ${
+                  replyMode === "internal"
+                    ? "bg-amber-500 hover:bg-amber-600"
+                    : "bg-[#1C2956] hover:bg-[#030349]"
+                }`}
               >
                 <Send size={14} className="text-white" />
               </button>
             </form>
+            {replyMode === "internal" && (
+              <p className="text-[11px] text-amber-600 mt-1.5 flex items-center gap-1 px-1">
+                <AlertCircle size={11} />
+                You are writing an internal case note (not visible to contact)
+              </p>
+            )}
           </div>
         </>
       )}
@@ -1021,6 +1078,8 @@ export default function CsrPage() {
   const [threads, setThreads] = useState<InquiryThread[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [threadMessages, setThreadMessages] = useState<InquiryMessage[]>([]);
+  const [inlineNotes, setInlineNotes] = useState<{ id: string; body: string; created_at: string }[]>([]);
+  const [replyMode, setReplyMode] = useState<"public" | "internal">("public");
   const [activeTab, setActiveTab] = useState<"Chat" | "Email" | "Script">("Chat");
   const [reply, setReply] = useState("");
   const [aiQuery, setAiQuery] = useState("");
@@ -1049,6 +1108,20 @@ export default function CsrPage() {
       .eq("thread_id", activeId)
       .order("created_at", { ascending: true })
       .then(({ data }: { data: InquiryMessage[] | null }) => setThreadMessages(data ?? []));
+  }, [activeId]);
+
+  /* ── Load inline notes when active thread changes ── */
+  useEffect(() => {
+    if (!activeId) return;
+    setInlineNotes([]);
+    supabase
+      .from("csr_notes")
+      .select("id, note_text, created_at")
+      .eq("thread_id", activeId)
+      .order("created_at", { ascending: true })
+      .then(({ data }) => {
+        if (data) setInlineNotes(data.map((n: any) => ({ id: n.id, body: n.note_text, created_at: n.created_at })));
+      });
   }, [activeId]);
 
   /* ── Realtime: threads (INSERT + UPDATE) ── */
@@ -1098,16 +1171,18 @@ export default function CsrPage() {
     return () => { supabase.removeChannel(ch); };
   }, [activeId]);
 
-  /* ── Send CSR reply ── */
+  /* ── Send CSR reply or internal note ── */
   const handleSend = useCallback(async () => {
     if (!reply.trim() || !activeId) return;
-    await supabase.from("inquiry_messages").insert({
-      thread_id: activeId,
-      sender: "csr",
-      body: reply.trim(),
-    });
+    const text = reply.trim();
+    if (replyMode === "internal") {
+      const { data } = await supabase.from("csr_notes").insert({ thread_id: activeId, note_text: text }).select("id, note_text, created_at").single();
+      if (data) setInlineNotes((prev) => [...prev, { id: data.id, body: data.note_text, created_at: data.created_at }]);
+    } else {
+      await supabase.from("inquiry_messages").insert({ thread_id: activeId, sender: "csr", body: text });
+    }
     setReply("");
-  }, [reply, activeId]);
+  }, [reply, activeId, replyMode]);
 
   /* ── Change thread status ── */
   const handleStatusChange = useCallback(async (status: ThreadStatus) => {
@@ -1126,6 +1201,9 @@ export default function CsrPage() {
   const chatProps = {
     thread: activeThread,
     messages: threadMessages,
+    inlineNotes,
+    replyMode,
+    setReplyMode,
     activeTab,
     setActiveTab,
     reply,
