@@ -37,6 +37,7 @@ export default function InquiryStartPage() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [duplicateThread, setDuplicateThread] = useState<{ id: string; topic: string } | null>(null);
 
   // Return-to-chat state
   const [showReturn, setShowReturn]       = useState(false);
@@ -70,31 +71,51 @@ export default function InquiryStartPage() {
     setReturnThreads(data);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!form.topic) { setError("Please select a topic."); return; }
+  const createThread = async () => {
     setLoading(true);
-    setError("");
-
+    setDuplicateThread(null);
     const { data: thread, error: threadErr } = await supabase
       .from("inquiry_threads")
-      .insert({ name: form.name, email: form.email, topic: form.topic, status: "open" })
+      .insert({ name: form.name.trim(), email: form.email.trim().toLowerCase(), topic: form.topic, status: "open" })
       .select("id")
       .single();
-
     if (threadErr || !thread) {
       show("Something went wrong. Please try again.", "error");
       setLoading(false);
       return;
     }
-
     await supabase.from("inquiry_messages").insert({
       thread_id: thread.id,
       sender: "parent",
-      body: form.message,
+      body: form.message.trim(),
     });
-
     router.push(`/inquiry/${thread.id}`);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.name.trim())    { setError("Please enter your full name."); return; }
+    if (!form.email.trim())   { setError("Please enter your email address."); return; }
+    if (!form.topic)          { setError("Please select a topic."); return; }
+    if (!form.message.trim()) { setError("Please enter your question."); return; }
+    setError("");
+    setLoading(true);
+
+    const { data: existing } = await supabase
+      .from("inquiry_threads")
+      .select("id, topic")
+      .eq("email", form.email.trim().toLowerCase())
+      .eq("topic", form.topic)
+      .in("status", ["open", "in_progress"])
+      .maybeSingle();
+
+    if (existing) {
+      setLoading(false);
+      setDuplicateThread(existing);
+      return;
+    }
+
+    await createThread();
   };
 
   return (
@@ -185,6 +206,36 @@ export default function InquiryStartPage() {
           {/* Form card */}
           <div className="bg-white rounded-2xl shadow-xl shadow-gray-200/80 p-8 space-y-6">
 
+            {/* General error */}
+            {error && (
+              <p className="text-red-500 text-xs bg-red-50 border border-red-200 rounded-xl px-4 py-3">{error}</p>
+            )}
+
+            {/* Duplicate thread warning */}
+            {duplicateThread && (
+              <div className="bg-amber-50 border border-amber-300 rounded-xl px-4 py-3 space-y-2">
+                <p className="text-sm font-semibold text-amber-800">You already have an open {duplicateThread.topic} inquiry.</p>
+                <p className="text-xs text-amber-700">Would you like to continue that chat, or start a new one?</p>
+                <div className="flex gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => router.push(`/inquiry/${duplicateThread.id}`)}
+                    className="flex-1 text-xs font-bold bg-[#1C2956] text-white py-2 rounded-lg hover:bg-[#030349] transition-colors"
+                  >
+                    Go to existing chat
+                  </button>
+                  <button
+                    type="button"
+                    onClick={createThread}
+                    disabled={loading}
+                    className="flex-1 text-xs font-bold border border-amber-400 text-amber-800 py-2 rounded-lg hover:bg-amber-100 transition-colors disabled:opacity-50"
+                  >
+                    {loading ? "Starting…" : "Start new anyway"}
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* Name */}
             <div>
               <label htmlFor="name" className="block text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">
@@ -228,9 +279,6 @@ export default function InquiryStartPage() {
               <label className="block text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">
                 What&rsquo;s this about?
               </label>
-              {error && error.includes("topic") && (
-                <p className="text-red-500 text-xs mb-2">{error}</p>
-              )}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                 {TOPIC_OPTIONS.map((t) => {
                   const selected = form.topic === t.value;
@@ -335,23 +383,28 @@ export default function InquiryStartPage() {
                   </div>
 
                   {/* Password (UI-only mockup) */}
-                  <div className="relative">
-                    <Lock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-                    <input
-                      type={showPass ? "text" : "password"}
-                      value={returnPass}
-                      onChange={(e) => setReturnPass(e.target.value)}
-                      placeholder="Password"
-                      className="w-full border border-gray-200 rounded-xl pl-9 pr-10 py-2.5 text-sm text-[#030349] bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1C2956]/30 focus:border-[#1C2956] placeholder:text-gray-300 transition-all"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPass(!showPass)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                      aria-label={showPass ? "Hide password" : "Show password"}
-                    >
-                      {showPass ? <EyeOff size={14} /> : <Eye size={14} />}
-                    </button>
+                  <div className="space-y-1.5">
+                    <div className="relative">
+                      <Lock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                      <input
+                        type={showPass ? "text" : "password"}
+                        value={returnPass}
+                        onChange={(e) => setReturnPass(e.target.value)}
+                        placeholder="Password"
+                        className="w-full border border-gray-200 rounded-xl pl-9 pr-10 py-2.5 text-sm text-[#030349] bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1C2956]/30 focus:border-[#1C2956] placeholder:text-gray-300 transition-all"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPass(!showPass)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                        aria-label={showPass ? "Hide password" : "Show password"}
+                      >
+                        {showPass ? <EyeOff size={14} /> : <Eye size={14} />}
+                      </button>
+                    </div>
+                    <p className="text-[10px] text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-2.5 py-1.5 leading-snug">
+                      🔒 Password verification coming soon. Currently, access is by email only.
+                    </p>
                   </div>
 
                   <button

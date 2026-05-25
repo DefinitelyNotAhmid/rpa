@@ -14,31 +14,15 @@ export const metadata: Metadata = {
   },
 };
 
+const LOREM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+
 const faqs = [
-  {
-    q: "Can RPA students attend charter or public schools prom?",
-    a: "Yes, for their school they participate as a student-athlete, or students can purchase tickets.",
-  },
-  {
-    q: "Do students graduate from Rise Prep Academy or the school he/she participates in for athletics?",
-    a: "The student's diploma will come from RPA. But, students can still walk at their athletic school graduation if approved by the principal.",
-  },
-  {
-    q: "Do I have to withdraw from my school to attend RPA?",
-    a: "Yes. RPA is a fully accredited and non-traditional private school registered with the Department of Education (school code 9374).",
-  },
-  {
-    q: "Is RPA accredited?",
-    a: "Yes, accredited by the National Association of Private Schools and Cognia. Seniors have been accepted in 15 states and over 30 colleges/universities.",
-  },
-  {
-    q: "Does RPA have certified teachers?",
-    a: "Yes, RPA has three certified teachers and two facilitators with three or more years of classroom experience.",
-  },
-  {
-    q: "Can students play football during the fall at one school and play basketball or track at another school?",
-    a: "Yes, because RPA doesn't offer athletics.",
-  },
+  { q: "Can RPA students attend charter or public schools prom?", a: LOREM },
+  { q: "Do students graduate from Rise Prep Academy or the school he/she participates in for athletics?", a: LOREM },
+  { q: "Do I have to withdraw from my school to attend RPA?", a: LOREM },
+  { q: "Is RPA accredited?", a: LOREM },
+  { q: "Does RPA have certified teachers?", a: LOREM },
+  { q: "Can students play football during the fall at one school and play basketball or track at another school?", a: LOREM },
 ];
 
 export default function FAQPage() {

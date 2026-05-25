@@ -4,6 +4,7 @@ import { TrustBar } from "@/components/sections/TrustBar";
 import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
 import { UniversityGrid } from "@/components/sections/UniversityGrid";
 import { UniversityMarquee } from "@/components/sections/UniversityMarquee";
+import { WhyRpaSection } from "@/components/sections/WhyRpaSection";
 import { CtaBand } from "@/components/ui/CtaBand";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
@@ -55,6 +56,7 @@ export default function Home() {
       />
       <HeroSection />
       <ScrollReveal><TrustBar /></ScrollReveal>
+      <ScrollReveal delay="delay-100"><WhyRpaSection /></ScrollReveal>
       <ScrollReveal delay="delay-200"><UniversityGrid /></ScrollReveal>
       <ScrollReveal delay="delay-100"><UniversityMarquee /></ScrollReveal>
       <ScrollReveal delay="delay-100"><TestimonialsSection /></ScrollReveal>

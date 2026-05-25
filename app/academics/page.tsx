@@ -20,9 +20,57 @@ export default function AcademicsPage() {
   return (
     <>
       <PageHero
-        title="Grading Scale"
+        title="Academics"
         breadcrumb="Home / Academics"
       />
+
+      {/* Programs Overview */}
+      <ScrollReveal>
+        <section className="bg-cream py-16 px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center space-y-3 mb-12">
+              <p className="text-xs text-gold font-semibold uppercase tracking-widest">
+                Our Programs
+              </p>
+              <h2 className="font-serif text-navy text-2xl md:text-4xl">
+                A Rigorous Path to College
+              </h2>
+              <p className="text-gray-600 text-sm max-w-xl mx-auto">
+                Rise Preparatory Academy requires 28 credits to graduate — four more than Florida&rsquo;s state minimum.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white border border-gray-200 rounded-xl px-6 py-8 flex flex-col gap-3">
+                <p className="font-serif text-gold text-2xl leading-none">01</p>
+                <h3 className="font-serif text-navy text-lg leading-snug">College Preparatory Track</h3>
+                <p className="text-gray-600 text-sm leading-relaxed flex-1">
+                  28 credits required to graduate — four more than Florida&rsquo;s 24 minimum. Rigorous core curriculum across all subject areas.
+                </p>
+              </div>
+              <div className="bg-white border border-gray-200 rounded-xl px-6 py-8 flex flex-col gap-3">
+                <p className="font-serif text-gold text-2xl leading-none">02</p>
+                <h3 className="font-serif text-navy text-lg leading-snug">Advanced Placement</h3>
+                <p className="text-gray-600 text-sm leading-relaxed flex-1">
+                  Weighted GPA. College-level coursework available to qualifying students who are ready to accelerate beyond the standard track.
+                </p>
+                <Link href="/academics/advanced-placement" className="text-xs font-semibold text-navy hover:text-gold transition-colors mt-1">
+                  Learn more →
+                </Link>
+              </div>
+              <div className="bg-white border border-gray-200 rounded-xl px-6 py-8 flex flex-col gap-3">
+                <p className="font-serif text-gold text-2xl leading-none">03</p>
+                <h3 className="font-serif text-navy text-lg leading-snug">Community Service</h3>
+                <p className="text-gray-600 text-sm leading-relaxed flex-1">
+                  Character development and civic responsibility are built into graduation requirements. Students give back as they grow.
+                </p>
+                <Link href="/academics/community-service" className="text-xs font-semibold text-navy hover:text-gold transition-colors mt-1">
+                  Learn more →
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      </ScrollReveal>
 
       <ScrollReveal>
       <section className="max-w-4xl mx-auto px-6 py-16 space-y-10">

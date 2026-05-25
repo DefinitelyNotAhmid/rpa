@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { universities, type UniversityCategory } from "@/lib/data/universities";
 import { UniversityMap } from "./UniversityMap";
 import { CountUp } from "@/components/ui/CountUp";
@@ -24,11 +25,70 @@ const tabCls = (active: boolean) =>
       : "bg-transparent text-navy/80 border-navy/30 hover:border-navy/60 hover:text-navy"
   }`;
 
+type University = typeof universities[0];
+
+function UniversityModal({ university, onClose }: { university: University; onClose: () => void }) {
+  const close = useCallback(() => onClose(), [onClose]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") close(); };
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [close]);
+
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-deep-navy/80 backdrop-blur-sm"
+      onClick={close}
+    >
+      <div
+        className="relative bg-white rounded-2xl px-14 py-16 flex flex-col items-center gap-6 shadow-2xl max-w-2xl w-full"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={close}
+          className="absolute top-4 right-4 text-gray-400 hover:text-navy text-lg leading-none transition-colors"
+          aria-label="Close"
+        >
+          ✕
+        </button>
+        <div className="relative w-full aspect-video rounded-xl overflow-hidden">
+          <Image
+            src={university.logo}
+            alt={university.name}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 672px"
+          />
+        </div>
+        <div className="w-10 h-px bg-gold/40" />
+        <p className="font-serif text-navy text-lg text-center leading-snug">{university.name}</p>
+        <div className="flex flex-wrap gap-1.5 justify-center">
+          {university.categories.includes("florida") && (
+            <span className="text-[0.6rem] font-bold uppercase tracking-wide bg-navy/10 text-navy px-2 py-0.5 rounded-full">Florida</span>
+          )}
+          {university.categories.includes("out-of-state") && (
+            <span className="text-[0.6rem] font-bold uppercase tracking-wide bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">Out-of-State</span>
+          )}
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+}
+
 export function UniversityGrid() {
   const [view, setView] = useState<View>("grid");
   const [active, setActive] = useState<Filter>("all");
   const [fading, setFading] = useState(false);
   const [showAll, setShowAll] = useState(false);
+  const [selected, setSelected] = useState<University | null>(null);
 
   const filtered =
     active === "all"
@@ -49,6 +109,7 @@ export function UniversityGrid() {
   }
 
   return (
+    <>
     <section className="bg-cream py-14 px-4">
 
       {/* Header + stat strip */}
@@ -157,6 +218,13 @@ export function UniversityGrid() {
                     className="object-contain grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-300"
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
                   />
+                  <button
+                    onClick={() => setSelected(u)}
+                    className="absolute inset-0 flex items-center justify-center bg-navy/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded"
+                    aria-label={`View ${u.name} logo`}
+                  >
+                    <span className="text-white text-[0.6rem] font-semibold uppercase tracking-widest">View Photo</span>
+                  </button>
                 </div>
                 <span className="text-[0.6rem] font-semibold text-navy/80 uppercase tracking-wide text-center leading-tight">
                   {u.name}
@@ -190,5 +258,8 @@ export function UniversityGrid() {
       )}
 
     </section>
+
+      {selected && <UniversityModal university={selected} onClose={() => setSelected(null)} />}
+    </>
   );
 }
