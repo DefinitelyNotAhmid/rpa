@@ -5,6 +5,9 @@ import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
 import { UniversityGrid } from "@/components/sections/UniversityGrid";
 import { UniversityMarquee } from "@/components/sections/UniversityMarquee";
 import { WhyRpaSection } from "@/components/sections/WhyRpaSection";
+import { RpaAtGlance } from "@/components/sections/RpaAtGlance";
+import { NewsEventsSection } from "@/components/sections/NewsEventsSection";
+import { ApplicationsBanner } from "@/components/sections/ApplicationsBanner";
 import { CtaBand } from "@/components/ui/CtaBand";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
@@ -55,10 +58,12 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <HeroSection />
+      <ApplicationsBanner />
       <ScrollReveal><TrustBar /></ScrollReveal>
       <ScrollReveal delay="delay-100"><WhyRpaSection /></ScrollReveal>
       <ScrollReveal delay="delay-200"><UniversityGrid /></ScrollReveal>
       <ScrollReveal delay="delay-100"><UniversityMarquee /></ScrollReveal>
+      <ScrollReveal delay="delay-100"><NewsEventsSection /></ScrollReveal>
       <ScrollReveal delay="delay-100"><TestimonialsSection /></ScrollReveal>
       <ScrollReveal delay="delay-100"><CtaBand ctaLabel="Apply Now" ctaHref="/admissions/apply" /></ScrollReveal>
     </>

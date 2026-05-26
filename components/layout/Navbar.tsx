@@ -53,6 +53,9 @@ export function Navbar() {
             <Link href="/admissions" aria-current={isActive("/admissions") ? "page" : undefined} className={`rounded py-1 transition-colors focus-ring-gold ${isActive("/admissions") ? "text-gold" : "hover:text-gold"}`}>
               Admissions
             </Link>
+            <Link href="/news" aria-current={isActive("/news") ? "page" : undefined} className={`rounded py-1 transition-colors focus-ring-gold ${isActive("/news") ? "text-gold" : "hover:text-gold"}`}>
+              News &amp; Events
+            </Link>
             <Link href="/contact" aria-current={isActive("/contact") ? "page" : undefined} className={`rounded py-1 transition-colors focus-ring-gold ${isActive("/contact") ? "text-gold" : "hover:text-gold"}`}>
               Contact
             </Link>
@@ -110,6 +113,14 @@ export function Navbar() {
                 className={`text-sm rounded focus-ring-gold transition-colors ${isActive("/admissions") ? "text-gold" : "text-cream/80 hover:text-gold"}`}
               >
                 Admissions
+              </Link>
+              <Link
+                href="/news"
+                onClick={() => setMenuOpen(false)}
+                aria-current={isActive("/news") ? "page" : undefined}
+                className={`text-sm rounded focus-ring-gold transition-colors ${isActive("/news") ? "text-gold" : "text-cream/80 hover:text-gold"}`}
+              >
+                News &amp; Events
               </Link>
               <Link
                 href="/contact"

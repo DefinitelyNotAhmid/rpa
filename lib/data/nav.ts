@@ -13,6 +13,7 @@ export const aboutItems: NavItem[] = [
   { label: "About Us",               href: "/about",             groupLabel: "ABOUT US",  column: 1 },
   { label: "Our Mission & Vision",            href: "/about/mission-vision",                              column: 1 },
   { label: "Accreditation & Membership",          href: "/about/accreditation",                        column: 1 },
+  { label: "College Acceptances",    href: "/college-acceptances",                                       column: 1 },
   { label: "Standard of Ethical Conduct",        href: "/policies/standards-of-ethical-conduct", groupLabel: "POLICIES",  column: 2 },
   { label: "Employee Ethical Standards", href: "/policies/employee-ethical-standards",                     column: 2 },
   { label: "Ethics in Education",    href: "/policies/ethics-in-education",               column: 2 },

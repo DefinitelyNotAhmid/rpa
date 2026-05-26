@@ -122,9 +122,10 @@ export function UniversityGrid() {
         </h2>
         <div className="flex flex-wrap items-center justify-center gap-8">
           {[
+            { target: 12, suffix: ":1", label: "Student-Teacher Ratio" },
+            { target: 100, suffix: "%", label: "College Acceptance Rate" },
             { target: 30, suffix: "+", label: "Colleges & Universities" },
             { target: 15, suffix: "",  label: "States Represented" },
-            { target: 100, suffix: "%", label: "Graduation Rate" },
           ].map(({ target, suffix, label }) => (
             <div key={label} className="flex flex-col items-center">
               <span className="font-serif text-navy text-3xl font-bold leading-none">

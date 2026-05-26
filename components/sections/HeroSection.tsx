@@ -22,9 +22,6 @@ export function HeroSection() {
         <p className="text-cream text-lg md:text-xl mb-8 max-w-xl mx-auto animate-fade-up delay-200">
           A college-preparatory academy built for driven students.
         </p>
-        <div className="animate-fade-up delay-300 hover-lift-sm inline-block rounded-full">
-          <ButtonPrimary href="/admissions/apply">Apply Now</ButtonPrimary>
-        </div>
       </div>
     </section>
   );
