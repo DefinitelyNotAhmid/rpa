@@ -70,22 +70,56 @@ export default async function NewsArticlePage({ params }: Props) {
           </div>
 
           {/* Body */}
-          <div className="prose prose-navy max-w-none font-sans text-gray-700 leading-relaxed space-y-4">
-            <p>{item.excerpt}</p>
-            <p>
-              Rise Preparatory Academy continues to build on its legacy of academic excellence,
-              preparing students in grades 5–12 for college and beyond. Our dedicated faculty,
-              rigorous curriculum, and supportive community create an environment where every
-              student can thrive.
-            </p>
-            <p>
-              For more information about this announcement or to learn more about Rise Prep,
-              please contact our main office at{" "}
-              <a href="tel:+13057609494" className="text-navy underline hover:text-gold transition-colors">
-                (305) 760-9494
-              </a>{" "}
-              or visit us at 18900 SW 106 Ave, Suite 205, Cutler Bay, FL 33157.
-            </p>
+          <div className="max-w-none font-sans text-gray-700 leading-relaxed space-y-5">
+            {item.body ? (
+              item.body.split("\n\n").map((block, i) => {
+                const lines = block.trim().split("\n");
+                const isBulletBlock = lines.every((l) => l.startsWith("•"));
+                const isHeading = lines.length === 1 && !lines[0].startsWith("•") && lines[0] === lines[0].toUpperCase() || (lines.length === 1 && lines[0].endsWith("Highlights"));
+
+                if (isBulletBlock) {
+                  return (
+                    <ul key={i} className="space-y-2 pl-1">
+                      {lines.map((line, j) => (
+                        <li key={j} className="flex gap-2 text-sm md:text-base">
+                          <span className="text-gold font-bold flex-shrink-0">•</span>
+                          <span>{line.replace(/^•\s*/, "")}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  );
+                }
+
+                if (isHeading) {
+                  return (
+                    <h3 key={i} className="font-serif text-navy text-lg md:text-xl font-bold pt-2">
+                      {block.trim()}
+                    </h3>
+                  );
+                }
+
+                return (
+                  <p key={i} className="text-sm md:text-base">
+                    {block.trim()}
+                  </p>
+                );
+              })
+            ) : (
+              <>
+                <p>{item.excerpt}</p>
+                <p>
+                  Rise Preparatory Academy continues to build on its legacy of academic excellence,
+                  preparing students in grades 5–12 for college and beyond.
+                </p>
+                <p>
+                  For more information, contact our main office at{" "}
+                  <a href="tel:+13057609494" className="text-navy underline hover:text-gold transition-colors">
+                    (305) 760-9494
+                  </a>{" "}
+                  or visit us at 18900 SW 106 Ave, Suite 205, Cutler Bay, FL 33157.
+                </p>
+              </>
+            )}
           </div>
 
           {/* Back link */}
