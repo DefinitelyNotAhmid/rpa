@@ -128,38 +128,31 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
 
   return (
     <>
-      <div className="relative flex flex-col h-full bg-white/5 border border-white/10 rounded-xl px-7 pt-10 pb-8 overflow-hidden">
-        {/* Decorative large quote mark */}
-        <span
-          className="absolute top-3 right-5 font-serif text-gold/20 select-none pointer-events-none leading-none"
-          aria-hidden="true"
-          style={{ fontSize: "6rem" }}
-        >
-          &ldquo;
-        </span>
-
-        <blockquote className="border-l-4 border-gold pl-5 relative z-10 flex-1">
-          <p className="font-serif italic text-cream text-lg md:text-xl leading-loose font-medium">
+      <div className="flex flex-col border-l-2 border-gold/50 pl-6 gap-4">
+        <blockquote>
+          <p className="font-serif italic text-navy text-base md:text-lg leading-relaxed">
             &ldquo;{testimonial.quote}&rdquo;
           </p>
         </blockquote>
 
-        <div className="relative z-10 mt-5">
-          <p className="text-sm font-semibold text-gold/90">— {testimonial.author}</p>
-          <p className="text-xs text-cream/90 mt-0.5">{testimonial.role}</p>
+        <div>
+          <p className="font-sans text-[0.7rem] font-bold uppercase tracking-widest text-gold">
+            {testimonial.author}
+          </p>
+          <p className="font-sans text-[0.6rem] uppercase tracking-widest text-muted mt-0.5">
+            {testimonial.role}
+          </p>
         </div>
 
-        <div className="relative z-10 mt-3">
-          <button
-            ref={triggerRef}
-            onClick={() => setIsOpen(true)}
-            aria-haspopup="dialog"
-            aria-expanded={isOpen}
-            className="text-xs text-cream/75 hover:text-cream transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded hover:translate-x-0.5"
-          >
-            Read full story →
-          </button>
-        </div>
+        <button
+          ref={triggerRef}
+          onClick={() => setIsOpen(true)}
+          aria-haspopup="dialog"
+          aria-expanded={isOpen}
+          className="font-sans text-xs text-navy/60 hover:text-navy transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded w-fit"
+        >
+          Read full story →
+        </button>
       </div>
 
       {/* Modal — portalled to body so it escapes the grid DOM */}
@@ -212,47 +205,23 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
 }
 
 export function TestimonialsSection() {
-  const featured = testimonials[0];
-
   return (
-    <section className="bg-navy py-20 px-4">
-      <div className="max-w-6xl mx-auto space-y-14">
+    <section className="bg-cream py-20 px-4 border-t border-gray-200">
+      <div className="max-w-6xl mx-auto">
 
         {/* Section header */}
-        <div className="text-center space-y-3">
-          <p className="text-xs text-gold font-semibold uppercase tracking-widest">
-            What Families Say
-          </p>
-          <h2 className="font-serif text-white text-2xl md:text-4xl">
-            Trusted by Families Across South Florida
+        <div className="text-center mb-16">
+          <div className="w-8 h-px bg-gold/50 mx-auto mb-6" />
+          <h2 className="font-serif text-navy text-3xl md:text-5xl leading-tight">
+            Trusted by Families
           </h2>
-          <p className="text-cream/90 text-sm max-w-xl mx-auto">
-            Real stories from students and parents whose lives were changed by Rise Preparatory Academy.
+          <p className="font-sans text-muted text-sm mt-3 max-w-md mx-auto">
+            Real stories from students and parents across South Florida.
           </p>
         </div>
 
-        {/* Featured pull-quote */}
-        <div className="relative bg-white/5 border border-gold/30 rounded-2xl px-8 md:px-14 py-10 text-center overflow-hidden">
-          <span
-            className="absolute top-2 left-6 font-serif text-gold/10 select-none pointer-events-none leading-none"
-            aria-hidden="true"
-            style={{ fontSize: "10rem" }}
-          >
-            &ldquo;
-          </span>
-          <blockquote className="relative z-10 max-w-3xl mx-auto">
-            <p className="font-serif italic text-white text-xl md:text-2xl leading-relaxed">
-              &ldquo;{featured.quote}&rdquo;
-            </p>
-            <footer className="mt-5">
-              <p className="text-sm font-semibold text-gold">— {featured.author}</p>
-              <p className="text-xs text-cream/90 mt-0.5">{featured.role}</p>
-            </footer>
-          </blockquote>
-        </div>
-
-        {/* All cards grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 items-stretch">
+        {/* Open testimonial grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-x-8 gap-y-10 items-start">
           {testimonials.map((t) => (
             <TestimonialCard key={t.author} testimonial={t} />
           ))}

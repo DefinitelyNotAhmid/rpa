@@ -28,7 +28,7 @@ export function NewsEventsSection() {
 
   return (
     <section
-      className="bg-white py-16 overflow-hidden"
+      className="bg-cream border-t border-gray-200 py-16 overflow-hidden"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >

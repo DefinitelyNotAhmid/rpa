@@ -48,35 +48,47 @@ function UniversityModal({ university, onClose }: { university: University; onCl
       onClick={close}
     >
       <div
-        className="relative bg-white rounded-2xl px-14 py-16 flex flex-col items-center gap-6 shadow-2xl max-w-2xl w-full"
+        className="relative bg-white rounded-2xl px-10 py-12 flex flex-col items-center gap-5 shadow-2xl max-w-sm w-full"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={close}
-          className="absolute top-4 right-4 text-gray-400 hover:text-navy text-lg leading-none transition-colors"
+          className="absolute top-4 right-4 text-gray-400 hover:text-navy text-base leading-none transition-colors"
           aria-label="Close"
         >
           ✕
         </button>
-        <div className="relative w-full aspect-video rounded-xl overflow-hidden">
+        {/* Contained logo — not stretched */}
+        <div className="relative w-full h-24 flex items-center justify-center">
           <Image
             src={university.logo}
             alt={university.name}
             fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 672px"
+            className="object-contain"
+            sizes="320px"
           />
         </div>
-        <div className="w-10 h-px bg-gold/40" />
+        <div className="w-8 h-px bg-gold/40" />
         <p className="font-serif text-navy text-lg text-center leading-snug">{university.name}</p>
-        <div className="flex flex-wrap gap-1.5 justify-center">
+        <div className="flex flex-wrap gap-2 justify-center">
           {university.categories.includes("florida") && (
-            <span className="text-[0.6rem] font-bold uppercase tracking-wide bg-navy/10 text-navy px-2 py-0.5 rounded-full">Florida</span>
+            <span className="font-sans text-[0.6rem] font-bold uppercase tracking-widest text-navy/60">Florida</span>
           )}
           {university.categories.includes("out-of-state") && (
-            <span className="text-[0.6rem] font-bold uppercase tracking-wide bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">Out-of-State</span>
+            <span className="font-sans text-[0.6rem] font-bold uppercase tracking-widest text-navy/60">Out-of-State</span>
           )}
         </div>
+        <a
+          href={`https://www.google.com/search?q=${encodeURIComponent(university.name)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-sans text-xs font-semibold text-navy/50 hover:text-navy transition-colors mt-1 inline-flex items-center gap-1"
+        >
+          Visit Website
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M3.5 3H2a1 1 0 00-1 1v6a1 1 0 001 1h6a1 1 0 001-1V8.5M7 1h4m0 0v4m0-4L5 7" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+          </svg>
+        </a>
       </div>
     </div>,
     document.body
@@ -140,10 +152,10 @@ export function UniversityGrid() {
       {/* View toggle */}
       <div className="flex items-center justify-center gap-2 mb-6">
         <button onClick={() => setView("grid")} className={tabCls(view === "grid")}>
-          ⊞ Grid View
+          Grid View
         </button>
         <button onClick={() => setView("map")} className={tabCls(view === "map")}>
-          🗺 Map View
+          Map View
         </button>
       </div>
 
@@ -207,9 +219,11 @@ export function UniversityGrid() {
             }`}
           >
             {visible.map((u) => (
-              <div
+              <button
                 key={u.name}
-                className="group bg-white border border-gray-100 rounded-xl p-4 flex flex-col items-center gap-3 shadow-sm hover:shadow-md hover:border-navy/20 transition-all duration-200"
+                onClick={() => setSelected(u)}
+                className="group bg-white border border-gray-100 rounded-xl p-4 flex flex-col items-center gap-3 shadow-sm hover:shadow-md hover:border-navy/20 transition-all duration-200 text-left w-full cursor-pointer"
+                aria-label={`View ${u.name}`}
               >
                 <div className="relative w-full h-14">
                   <Image
@@ -219,26 +233,11 @@ export function UniversityGrid() {
                     className="object-contain grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-300"
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
                   />
-                  <button
-                    onClick={() => setSelected(u)}
-                    className="absolute inset-0 flex items-center justify-center bg-navy/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded"
-                    aria-label={`View ${u.name} logo`}
-                  >
-                    <span className="text-white text-[0.6rem] font-semibold uppercase tracking-widest">View Photo</span>
-                  </button>
                 </div>
-                <span className="text-[0.6rem] font-semibold text-navy/80 uppercase tracking-wide text-center leading-tight">
+                <span className="font-sans text-[0.6rem] font-semibold text-navy/80 uppercase tracking-wide text-center leading-tight">
                   {u.name}
                 </span>
-                <div className="flex flex-wrap gap-1 justify-center">
-                  {u.categories.includes("florida") && (
-                    <span className="text-[0.55rem] font-bold uppercase tracking-wide bg-navy/10 text-navy px-1.5 py-0.5 rounded-full">FL</span>
-                  )}
-                  {u.categories.includes("out-of-state") && (
-                    <span className="text-[0.55rem] font-bold uppercase tracking-wide bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-full">Out-of-State</span>
-                  )}
-                </div>
-              </div>
+              </button>
             ))}
           </div>
 

@@ -1,28 +1,17 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Facebook, Instagram, Linkedin } from "lucide-react";
 
 const socials = [
-  {
-    icon: <Facebook size={18} aria-hidden="true" />,
-    href: "https://facebook.com/riseprep",
-    label: "Facebook",
-  },
-  {
-    icon: <Instagram size={18} aria-hidden="true" />,
-    href: "https://instagram.com/riseprep",
-    label: "Instagram",
-  },
-  {
-    icon: <Linkedin size={18} aria-hidden="true" />,
-    href: "https://linkedin.com/school/riseprep",
-    label: "LinkedIn",
-  },
+  { href: "https://facebook.com/riseprep", label: "Facebook" },
+  { href: "https://instagram.com/riseprep", label: "Instagram" },
+  { href: "https://linkedin.com/school/riseprep", label: "LinkedIn" },
 ];
 
 export function Footer() {
   return (
     <footer className="bg-deep-navy text-cream">
+      {/* Gold rule */}
+      <div className="h-px bg-gold/30 w-full" />
       <div className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-4 gap-10">
 
         {/* Brand column */}
@@ -39,16 +28,15 @@ export function Footer() {
             Empowering students through accelerated academic excellence.
           </p>
           <div className="flex gap-4 mt-5">
-            {socials.map(({ icon, href, label }) => (
+            {socials.map(({ href, label }) => (
               <a
                 key={label}
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={label}
-                className="text-cream/75 hover:text-white hover:scale-110 transition-all duration-200"
+                className="font-sans text-[0.65rem] font-semibold uppercase tracking-widest text-cream/50 hover:text-cream transition-colors duration-200"
               >
-                {icon}
+                {label}
               </a>
             ))}
           </div>
@@ -132,16 +120,18 @@ export function Footer() {
       </div>
 
       {/* Sub-footer */}
-      <div className="bg-[#020235] border-t border-white/5 py-3 px-6 text-center">
-        <p className="text-[0.7rem] text-cream/90 tracking-wide">
-          © {new Date().getFullYear()} Rise Preparatory Academy
-        </p>
-        <Link
-          href="/policies"
-          className="text-cream/75 hover:text-cream transition-colors text-xs mt-1 inline-block"
-        >
-          Non-Discriminatory Policy
-        </Link>
+      <div className="bg-[#020235] border-t border-white/5 py-3 px-6">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+          <p className="font-sans text-[0.65rem] text-cream/70 tracking-wide">
+            © {new Date().getFullYear()} Rise Preparatory Academy
+          </p>
+          <Link
+            href="/policies"
+            className="font-sans text-[0.65rem] text-cream/60 hover:text-cream transition-colors"
+          >
+            Non-Discriminatory Policy
+          </Link>
+        </div>
       </div>
     </footer>
   );
