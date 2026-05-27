@@ -13,8 +13,8 @@ export function HeroSection() {
     <section className="relative h-[85vh] min-h-[580px] flex flex-col justify-center overflow-hidden">
       {/* Background photo */}
       <Image
-        src="/rise-preparatory-academy-cutler-bay-fl-primaryphoto.jpg"
-        alt="Rise Preparatory Academy building exterior, Cutler Bay FL"
+        src="/graduation.png"
+        alt="Rise Preparatory Academy Class of 2026 Graduation Ceremony"
         fill
         className="object-cover animate-soft-zoom"
         priority
