@@ -86,7 +86,7 @@ export default function CollegeAcceptancesPage() {
             A Proven Pipeline to College
           </h2>
           <p className="font-sans text-gray-600 text-base leading-relaxed">
-            Since 2010, Rise Preparatory Academy has maintained a{" "}
+            Since 2018, Rise Preparatory Academy has maintained a{" "}
             <strong className="text-navy">100% college acceptance rate</strong>. Our
             accelerated, college-preparatory curriculum — combined with a low
             12:1 student-teacher ratio — ensures every graduate is not just

@@ -23,34 +23,57 @@ const WHY_CARDS = [
 
 export function WhyRpaSection() {
   return (
-    <section className="bg-navy py-20 px-4">
-      <div className="max-w-6xl mx-auto">
+    <section className="relative bg-navy py-24 px-4 overflow-hidden">
+      {/* Subtle radial warm glow — texture only */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.07) 0%, transparent 65%)",
+        }}
+      />
 
-        <div className="text-center space-y-3 mb-14">
-          <p className="text-xs text-gold font-semibold uppercase tracking-widest">
-            Why Rise Preparatory Academy
-          </p>
-          <h2 className="font-serif text-white text-2xl md:text-4xl">
+      <div className="relative z-10 max-w-6xl mx-auto">
+
+        {/* Heading */}
+        <div className="text-center mb-20">
+          <div className="w-8 h-px bg-gold/50 mx-auto mb-6" />
+          <h2 className="font-serif text-white text-3xl md:text-5xl leading-tight">
             Small Size. Big Opportunities.
           </h2>
-          <p className="text-cream/80 text-sm max-w-xl mx-auto">
-            What are the benefits of attending Rise Preparatory Academy?
-          </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {WHY_CARDS.map((card) => (
+        {/* Cards — no boxes, vertical dividers only */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+          {WHY_CARDS.map((card, i) => (
             <div
               key={card.num}
-              className="bg-white/5 border border-white/10 rounded-xl px-6 py-8 flex flex-col gap-3 hover:bg-white/10 hover:border-gold/30 transition-all duration-200"
+              className={`relative px-8 py-2 flex flex-col gap-0
+                ${i < WHY_CARDS.length - 1 ? "lg:border-r border-gold/20" : ""}
+                ${i > 0 ? "sm:border-l lg:border-l-0 border-gold/10" : ""}
+              `}
             >
-              <span className="font-serif text-gold text-2xl leading-none">
+              {/* Large faint number — display texture */}
+              <span
+                className="font-serif leading-none select-none mb-2"
+                style={{
+                  fontSize: "clamp(4rem, 7vw, 6rem)",
+                  color: "rgba(201,168,76,0.55)",
+                }}
+              >
                 {card.num}
               </span>
-              <h3 className="font-serif text-white text-lg leading-snug">
+
+              {/* Heading */}
+              <h3 className="font-serif text-white text-lg md:text-xl leading-snug mb-3">
                 {card.heading}
               </h3>
-              <p className="text-cream/75 text-sm leading-relaxed">
+
+              {/* Rule */}
+              <div className="w-8 h-px bg-gold/40 mb-3" />
+
+              {/* Body */}
+              <p className="font-sans text-cream/55 text-sm leading-relaxed">
                 {card.body}
               </p>
             </div>

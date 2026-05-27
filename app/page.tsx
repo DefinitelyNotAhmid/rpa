@@ -46,7 +46,7 @@ const jsonLd = {
   },
   telephone: "+13057609494",
   email: "Sperry@risepreparatory.org",
-  foundingDate: "2010",
+  foundingDate: "2018",
   areaServed: "Cutler Bay, FL",
   knowsAbout: ["College Preparation", "Accelerated Academics", "Grades 5-12"],
 };

@@ -8,11 +8,11 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 export const metadata: Metadata = {
   title: "About Us",
   description:
-    "Learn about Rise Preparatory Academy — an accredited college-prep school in Cutler Bay, FL serving grades 5–12 with accelerated academics since 2010.",
+    "Learn about Rise Preparatory Academy — an accredited college-prep school in Cutler Bay, FL serving grades 5–12 with accelerated academics since 2018.",
   openGraph: {
     title: "About Us | Rise Preparatory Academy",
     description:
-      "Learn about Rise Preparatory Academy — an accredited college-prep school in Cutler Bay, FL serving grades 5–12 with accelerated academics since 2010.",
+      "Learn about Rise Preparatory Academy — an accredited college-prep school in Cutler Bay, FL serving grades 5–12 with accelerated academics since 2018.",
     url: "https://riseprep.vercel.app/about",
   },
 };
