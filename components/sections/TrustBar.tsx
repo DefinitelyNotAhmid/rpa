@@ -23,14 +23,14 @@ export function TrustBar() {
           />
           <div>
             <p className="font-sans text-[0.6rem] font-bold uppercase tracking-[0.18em] text-navy">Cognia Accredited</p>
-            <p className="font-sans text-[0.55rem] uppercase tracking-widest text-gray-500 mt-0.5">Since 2018</p>
+            <p className="font-sans text-[0.55rem] uppercase tracking-widest text-navy/60 mt-0.5">Since 2018</p>
           </div>
         </div>
         {/* Stat items */}
         {items.slice(1).map((item) => (
           <div key={item.text} className="px-8 py-1 text-center">
             <p className="font-sans text-[0.6rem] font-bold uppercase tracking-[0.18em] text-navy">{item.text}</p>
-            <p className="font-sans text-[0.55rem] uppercase tracking-widest text-gray-500 mt-0.5">{item.sub}</p>
+            <p className="font-sans text-[0.55rem] uppercase tracking-widest text-navy/60 mt-0.5">{item.sub}</p>
           </div>
         ))}
       </div>
